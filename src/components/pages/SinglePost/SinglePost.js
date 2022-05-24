@@ -1,12 +1,13 @@
 import { useParams } from 'react-router';
 import { Navigate } from 'react-router-dom';
+import PostDetails from '../../features/PostDetails/PostDetails'
 
 const SinglePost = () => {
 
   const { id } = useParams();
   if (!id) return <Navigate to="/NotFound" />
   return (
-    <h1>Post</h1>
+    <PostDetails id={id} />
   );
 };
 
