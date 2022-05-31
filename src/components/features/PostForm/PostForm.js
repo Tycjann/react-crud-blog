@@ -7,20 +7,35 @@ import 'react-quill/dist/quill.snow.css';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
-const PostForm = ({ action, actionText, ...props }) => {
+import { useForm } from "react-hook-form";
 
+import ErrorTextValidate from '../../common/ErrorTextValidate/ErrorTextValidate.js'
+
+const PostForm = ({ action, actionText, ...props }) => {
   const [title, setTitle] = useState(props.title || '');
   const [author, setAuthor] = useState(props.author || '');
   const newDate = new Date()
   const [publishedDate, setPublishedDate] = useState(props.publishedDate || newDate);
   const [shortDescription, setShortDescription] = useState(props.shortDescription || '');
   const [content, setContent] = useState(props.content || '');
+  const [dateError, setDateError] = useState(false);
+  const [contentError, setContentError] = useState(false);
 
-  const handleSubmit = e => {
-    e.preventDefault();
-    action({ title, author, publishedDate, shortDescription, content });
+  const handleSubmit = () => {
+    // if (!content || content === '<p><br></p>') setContentError(true); else setContentError(false);
+    // if (!publishedDate) setDateError(true); else setDateError(false);
+    // setDateError(!publishedDate);
+    // console.log('content:', content);
+    // if (contentError === false && dateError === false) 
+    setContentError(!content)
+    setDateError(!publishedDate)
+    if (content && publishedDate) {
+      action({ title, author, publishedDate, shortDescription, content });
+    }
   };
-  
+
+  const { register, handleSubmit: validate, formState: { errors } } = useForm();
+
   const modules = {
     toolbar: [
       [{ header: "1" }, { header: "2" }, { font: [] }],
@@ -42,7 +57,7 @@ const PostForm = ({ action, actionText, ...props }) => {
   };
 
   return (
-    <Form onSubmit={handleSubmit}>
+    <Form onSubmit={validate(handleSubmit)}>
       <Row>
         <Col md={1}><Form.Label className="pt-2 align-baseline">Published</Form.Label></Col>
         <Col sm={11}>
@@ -54,6 +69,7 @@ const PostForm = ({ action, actionText, ...props }) => {
             className="mb-2 form-control"
             dateFormat="dd/MM/yyyy"
           />
+          {dateError && <ErrorTextValidate text={'This field is required'} />}
         </Col>
       </Row>
 
@@ -64,12 +80,17 @@ const PostForm = ({ action, actionText, ...props }) => {
       >
         <Form.Control
           // required
+          {...register("title", {
+            required: true,
+            minLength: 3,
+          })}
           type="text"
           placeholder="Title"
           name="title"
           value={title}
           onChange={e => setTitle(e.target.value)}
         />
+        {errors.title && <ErrorTextValidate text={'This field is required'} />}
       </FloatingLabel>
 
       <FloatingLabel
@@ -79,12 +100,17 @@ const PostForm = ({ action, actionText, ...props }) => {
       >
         <Form.Control
           // required
+          {...register("author", {
+            required: true,
+            minLength: 3,
+          })}
           type="text"
           placeholder="Author"
           name="author"
           value={author}
           onChange={e => setAuthor(e.target.value)}
         />
+        {errors.author && <ErrorTextValidate text={'This field is required'} />}
       </FloatingLabel>
 
       {/* <FloatingLabel
@@ -109,12 +135,17 @@ const PostForm = ({ action, actionText, ...props }) => {
       >
         <Form.Control
           // required
+          {...register("shortDescription", {
+            required: true,
+            minLength: 20,
+          })}
           type="text"
           placeholder="Short description"
           name="shortDescription"
           value={shortDescription}
           onChange={e => setShortDescription(e.target.value)}
         />
+        {errors.shortDescription && <ErrorTextValidate text={'This field is required'} />}
       </FloatingLabel>
 
       {/* Bug - duplicate toolbar: https://github.com/zenoamaro/react-quill/issues/784 */}
@@ -126,8 +157,9 @@ const PostForm = ({ action, actionText, ...props }) => {
         theme="snow"
         value={content}
         onChange={setContent}
-        placeholder="Main content"
+        placeholder=""
       />
+      {contentError && <ErrorTextValidate text={'This field is required'} /> }
 
       {/* <FloatingLabel
         controlId="mainContentInput"
