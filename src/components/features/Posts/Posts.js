@@ -2,11 +2,12 @@ import { Row, Col } from 'react-bootstrap';
 import PostCard from '../PostCard/PostCard';
 import { useSelector } from 'react-redux';
 import { getAllPosts } from '../../../redux/postsRedux.js';
+import dateToStr from '../../../utils/dateToStr.js';
 
 const Posts = () => {
   
   const posts = useSelector(getAllPosts);
-  
+
   return (
     <Row xs={1} md={2} lg={3} className="g-2">
     {posts.map(post => 
@@ -15,7 +16,8 @@ const Posts = () => {
           id={post.id}
           title={post.title}
           author={post.author}
-          publishedDate={post.publishedDate}
+          publishedDate={dateToStr(post.publishedDate)}
+          // publishedDate={JSON.stringify(post.publishedDate)}
           shortDescription={post.shortDescription}
         />
       </Col>

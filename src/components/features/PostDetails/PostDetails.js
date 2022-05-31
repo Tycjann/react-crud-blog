@@ -4,7 +4,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getSinglePostById } from '../../../redux/postsRedux.js';
 import { useState } from 'react';
 import { Navigate } from 'react-router-dom';
-import { removePost } from '../../../redux/postsRedux.js'
+import { removePost } from '../../../redux/postsRedux.js';
+import dateToStr from '../../../utils/dateToStr.js';
 
 const PostDetails = ({id}) => {
 
@@ -66,8 +67,8 @@ const PostDetails = ({id}) => {
       <Row className="justify-content-md-center">
         <Col xs={6} md={6} lg={6}>
           <p className="mb-0"><span className="fw-bold">Author:</span> {post.author}</p>
-          <p><span className="fw-bold">Published:</span> {post.publishedDate}</p>
-          <p>{post.content}</p>
+          <p><span className="fw-bold">Published:</span> {dateToStr(post.publishedDate)}</p>
+          <p dangerouslySetInnerHTML={{ __html: post.content }} />
           <hr/>
         </Col>
       </Row>
