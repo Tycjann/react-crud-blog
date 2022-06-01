@@ -1,4 +1,20 @@
 const initialState = { 
+
+  categories: [
+    {
+      id: '1',
+      category: 'Sport'
+    },
+    {
+      id: '2',
+      category: 'News'
+    },
+    {
+      id: '3',
+      category: 'Movies'
+    },
+  ],
+
   posts: [
     {
       id: '1',

@@ -1,14 +1,10 @@
 import { Row, Col, Form, FloatingLabel, Button } from 'react-bootstrap';
 import { useState } from 'react';
-
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
-
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-
 import { useForm } from "react-hook-form";
-
 import ErrorTextValidate from '../../common/ErrorTextValidate/ErrorTextValidate.js'
 
 const PostForm = ({ action, actionText, ...props }) => {
@@ -20,8 +16,16 @@ const PostForm = ({ action, actionText, ...props }) => {
   const [content, setContent] = useState(props.content || '');
   const [dateError, setDateError] = useState(false);
   const [contentError, setContentError] = useState(false);
+  const { register, handleSubmit: validate, formState: { errors } } = useForm();
+
+  const errorsMessages = {
+    thisFieldRequired: 'This field is required',
+    minLength03: 'Minimum 3 characters',
+    minLength20: 'Minimum 20 characters',
+  };
 
   const handleSubmit = () => {
+    // ! bug: https://github.com/zenoamaro/react-quill/issues/675
     // if (!content || content === '<p><br></p>') setContentError(true); else setContentError(false);
     // if (!publishedDate) setDateError(true); else setDateError(false);
     // setDateError(!publishedDate);
@@ -34,8 +38,8 @@ const PostForm = ({ action, actionText, ...props }) => {
     }
   };
 
-  const { register, handleSubmit: validate, formState: { errors } } = useForm();
-
+  // ! Bug - duplicate toolbar: https://github.com/zenoamaro/react-quill/issues/784
+  // ! Temporarily solved: remove <React.StrictMode></React.StrictMode>
   const modules = {
     toolbar: [
       [{ header: "1" }, { header: "2" }, { font: [] }],
@@ -69,7 +73,7 @@ const PostForm = ({ action, actionText, ...props }) => {
             className="mb-2 form-control"
             dateFormat="dd/MM/yyyy"
           />
-          {dateError && <ErrorTextValidate text={'This field is required'} />}
+          {dateError && <ErrorTextValidate text={errorsMessages.thisFieldRequired} />}
         </Col>
       </Row>
 
@@ -90,7 +94,12 @@ const PostForm = ({ action, actionText, ...props }) => {
           value={title}
           onChange={e => setTitle(e.target.value)}
         />
-        {errors.title && <ErrorTextValidate text={'This field is required'} />}
+        {errors.title 
+          && errors.title.type === "required" 
+          && <ErrorTextValidate text={errorsMessages.thisFieldRequired} />}
+        {errors.title 
+          && errors.title.type === "minLength" 
+          && <ErrorTextValidate text={errorsMessages.minLength03} />}
       </FloatingLabel>
 
       <FloatingLabel
@@ -110,7 +119,12 @@ const PostForm = ({ action, actionText, ...props }) => {
           value={author}
           onChange={e => setAuthor(e.target.value)}
         />
-        {errors.author && <ErrorTextValidate text={'This field is required'} />}
+        {errors.author 
+          && errors.author.type === "required" 
+          && <ErrorTextValidate text={errorsMessages.thisFieldRequired} />}
+        {errors.author 
+          && errors.author.type === "minLength" 
+          && <ErrorTextValidate text={errorsMessages.minLength03} />}
       </FloatingLabel>
 
       {/* <FloatingLabel
@@ -145,11 +159,14 @@ const PostForm = ({ action, actionText, ...props }) => {
           value={shortDescription}
           onChange={e => setShortDescription(e.target.value)}
         />
-        {errors.shortDescription && <ErrorTextValidate text={'This field is required'} />}
+        {errors.shortDescription 
+          && errors.shortDescription.type === "required" 
+          && <ErrorTextValidate text={errorsMessages.thisFieldRequired} />}
+        {errors.shortDescription 
+          && errors.shortDescription.type === "minLength" 
+          && <ErrorTextValidate text={errorsMessages.minLength20} />}
       </FloatingLabel>
 
-      {/* Bug - duplicate toolbar: https://github.com/zenoamaro/react-quill/issues/784 */}
-      {/* Temporarily solved: remove <React.StrictMode></React.StrictMode> */}
       <ReactQuill
         name="mainContentInput"
         modules={modules}
@@ -159,7 +176,7 @@ const PostForm = ({ action, actionText, ...props }) => {
         onChange={setContent}
         placeholder=""
       />
-      {contentError && <ErrorTextValidate text={'This field is required'} /> }
+      {contentError && <ErrorTextValidate text={errorsMessages.thisFieldRequired} /> }
 
       {/* <FloatingLabel
         controlId="mainContentInput"
