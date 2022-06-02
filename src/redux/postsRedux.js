@@ -6,6 +6,12 @@ export const getAllPosts = ({ posts }) => posts;
 export const getSinglePostById = ({ posts }, postId) => posts
   .find(post => (post.id === postId));
 
+export const getAllPostByCategoryId = ({ posts }, CategoryId) => posts
+  .filter(post => (post.categoryId === CategoryId));
+
+export const getAllPostByCategoryName = ({ posts }, CategoryId) => posts
+  .filter(post => (post.categoryId === CategoryId));
+
 // actions
 const createActionName = actionName => `app/posts/${actionName}`;
 const ADD_POST = createActionName('ADD_POST');

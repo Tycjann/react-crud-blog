@@ -9,17 +9,18 @@ const Posts = () => {
   const posts = useSelector(getAllPosts);
 
   return (
-    <Row xs={1} md={2} lg={3} className="g-2">
+    <Row className="g-2">
     {posts.map(post => 
-      <Col key={post.id}>
+      <Col key={post.id} xs={12} md={6} lg={4}>
         <PostCard
           id={post.id}
           title={post.title}
           author={post.author}
+          categoryId={post.categoryId}
           publishedDate={dateToStr(post.publishedDate)}
           // publishedDate={JSON.stringify(post.publishedDate)}
           shortDescription={post.shortDescription}
-        />
+        /> 
       </Col>
     )}
     </Row>

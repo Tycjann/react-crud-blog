@@ -19,6 +19,7 @@ const initialState = {
     {
       id: '1',
       title: 'Article title I',
+      categoryId: '2',
       shortDescription: 'Short description of the article...',
       content: 'Main content of the article... full text I.',
       publishedDate: new Date('02-02-2022'),
@@ -28,6 +29,7 @@ const initialState = {
     {
       id: '2',
       title: 'Article title II',
+      categoryId: '2',
       shortDescription: 'Short description of the article...',
       content: 'Main content of the article... full text II.',
       publishedDate: new Date('03-03-2022'),
@@ -37,6 +39,7 @@ const initialState = {
     {
       id: '3',
       title: 'Article title III',
+      categoryId: '3',
       shortDescription: 'Short description of the article...',
       content: 'Main content of the article... full text III.',
       publishedDate: new Date('04-04-2022'),
@@ -46,6 +49,7 @@ const initialState = {
     {
       id: '4',
       title: 'Article title IV',
+      categoryId: '3',
       shortDescription: 'Short description of the article...',
       content: 'Main content of the article... full text IV.',
       publishedDate: new Date('05-04-2022'),

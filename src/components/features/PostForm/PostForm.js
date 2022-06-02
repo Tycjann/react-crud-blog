@@ -13,17 +13,18 @@ const PostForm = ({ action, actionText, ...props }) => {
   const newDate = new Date()
   const [publishedDate, setPublishedDate] = useState(props.publishedDate || newDate);
   const [shortDescription, setShortDescription] = useState(props.shortDescription || '');
+  const [categoryId, setCategoryId] = useState(props.categoryId || '');
   const [content, setContent] = useState(props.content || '');
   const [dateError, setDateError] = useState(false);
   const [contentError, setContentError] = useState(false);
   const { register, handleSubmit: validate, formState: { errors } } = useForm();
-
+  
   const errorsMessages = {
     thisFieldRequired: 'This field is required',
     minLength03: 'Minimum 3 characters',
     minLength20: 'Minimum 20 characters',
   };
-
+  
   const handleSubmit = () => {
     // ! bug: https://github.com/zenoamaro/react-quill/issues/675
     // if (!content || content === '<p><br></p>') setContentError(true); else setContentError(false);
@@ -34,7 +35,7 @@ const PostForm = ({ action, actionText, ...props }) => {
     setContentError(!content)
     setDateError(!publishedDate)
     if (content && publishedDate) {
-      action({ title, author, publishedDate, shortDescription, content });
+      action({ title, author, categoryId, publishedDate, shortDescription, content });
     }
   };
 
@@ -59,6 +60,8 @@ const PostForm = ({ action, actionText, ...props }) => {
       matchVisual: false
     }
   };
+
+  console.log('categoryId:', categoryId);
 
   return (
     <Form onSubmit={validate(handleSubmit)}>
@@ -127,25 +130,27 @@ const PostForm = ({ action, actionText, ...props }) => {
           && <ErrorTextValidate text={errorsMessages.minLength03} />}
       </FloatingLabel>
 
-      {/* <FloatingLabel
-        controlId="publishedInput"
-        label="Published"
-        className="mb-2"
+      <Form.Select
+        {...register("categoryId", {
+          required: true,
+        })}
+        aria-label="Select category..."
+        name="categoryId"
+        value={categoryId}
+        onChange={e => setCategoryId(e.target.value)}
       >
-        <Form.Control
-          // required
-          type="text"
-          placeholder="Published"
-          name="publishedDate"
-          value={publishedDate}
-          onChange={e => setPublishedDate(e.target.value)}
-        />
-      </FloatingLabel> */}
+        <option value="">Select category...</option>
+        <option value="1">One</option>
+        <option value="2">Two</option>
+        <option value="3">Three</option>
+      </Form.Select>
+      
+      {errors.categoryId  && <ErrorTextValidate text={errorsMessages.thisFieldRequired} />}
 
       <FloatingLabel
         controlId="shortDescriptionInput"
         label="Short description"
-        className="mb-2"
+        className="mb-2 mt-2"
       >
         <Form.Control
           // required
@@ -177,21 +182,6 @@ const PostForm = ({ action, actionText, ...props }) => {
         placeholder=""
       />
       {contentError && <ErrorTextValidate text={errorsMessages.thisFieldRequired} /> }
-
-      {/* <FloatingLabel
-        controlId="mainContentInput"
-        label="Main content"
-        className="mb-2"
-      >
-        <Form.Control
-          // required
-          type="text"
-          placeholder="Main content"
-          name="content"
-          value={content}
-          onChange={e => setContent(e.target.value)}
-        />
-      </FloatingLabel> */}
 
       <Row className="mt-2">
         <Col className='text-end'>

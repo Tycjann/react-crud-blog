@@ -29,6 +29,7 @@ const EditPostForm = props => {
       actionText='Save edit post'
       title={post.title}
       author={post.author}
+      categoryId={post.categoryId}
       publishedDate={post.publishedDate}
       shortDescription={post.shortDescription}
       content={post.content}

@@ -6,6 +6,9 @@ export const getAllCategories = ({ categories }) => categories;
 export const getSingleCategoryById = ({ categories }, categoryId) => categories
   .find(category => (category.id === categoryId));
 
+export const getSingleCategoryByName = ({ categories }, name) => categories
+  .find(category => (category.category === name));
+
 // actions
 const createActionName = actionName => `app/category/${actionName}`;
 const ADD_CATEGORY = createActionName('ADD_CATEGORY');
