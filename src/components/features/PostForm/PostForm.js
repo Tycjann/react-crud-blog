@@ -6,6 +6,8 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { useForm } from "react-hook-form";
 import ErrorTextValidate from '../../common/ErrorTextValidate/ErrorTextValidate.js'
+import { useSelector } from 'react-redux';
+import { getAllCategories } from '../../../redux/categoriesRedux.js';
 
 const PostForm = ({ action, actionText, ...props }) => {
   const [title, setTitle] = useState(props.title || '');
@@ -61,7 +63,7 @@ const PostForm = ({ action, actionText, ...props }) => {
     }
   };
 
-  console.log('categoryId:', categoryId);
+  const categories = useSelector(getAllCategories);
 
   return (
     <Form onSubmit={validate(handleSubmit)}>
@@ -140,9 +142,9 @@ const PostForm = ({ action, actionText, ...props }) => {
         onChange={e => setCategoryId(e.target.value)}
       >
         <option value="">Select category...</option>
-        <option value="1">One</option>
-        <option value="2">Two</option>
-        <option value="3">Three</option>
+        {categories.map(category =>
+          <option key={"" + category.id + ""} value={""+ category.id + ""}>{category.category}</option>
+        )}
       </Form.Select>
       
       {errors.categoryId  && <ErrorTextValidate text={errorsMessages.thisFieldRequired} />}

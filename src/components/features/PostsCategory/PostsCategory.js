@@ -7,9 +7,12 @@ import { getSingleCategoryByName } from '../../../redux/categoriesRedux.js';
 
 const PostsCategory = props => {
 
-  const categoryId = useSelector(state => getSingleCategoryByName(state, props.categoryName));
+  let categoryId = useSelector(state => getSingleCategoryByName(state, props.categoryName));
 
-  // ? condition for bad categoryId
+  // ? Grzechu: To jest sensowne zabezpieczenie przed wpisaniem w adresie nieistniejącej kategorii?
+  // ? bez tego mam error z const posts... linia #16 
+  if (!categoryId) categoryId = {id: 0, category: ''};
+
   const posts = useSelector(state => getAllPostByCategoryId(state, categoryId.id));
 
   if (posts.length === 0) return (
