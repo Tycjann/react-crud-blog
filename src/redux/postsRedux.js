@@ -6,8 +6,13 @@ export const getAllPosts = ({ posts }) => posts;
 export const getSinglePostById = ({ posts }, postId) => posts
   .find(post => (post.id === postId));
 
-export const getAllPostByCategoryId = ({ posts }, CategoryId) => posts
-  .filter(post => (post.categoryId === CategoryId));
+// export const getAllPostByCategoryId = ({ posts }, CategoryId) => posts
+//   .filter(post => (post.categoryId === CategoryId));
+
+export const getAllPostByCategoryId = ({ posts }, category) => {
+  if (!category) return posts;
+  return posts.filter(post => (post.categoryId === category.id));
+};
 
 // actions
 const createActionName = actionName => `app/posts/${actionName}`;
